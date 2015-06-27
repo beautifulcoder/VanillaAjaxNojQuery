@@ -1,5 +1,5 @@
 ﻿var http = require('http'),
-    fs = require('fs');
+  fs = require('fs');
 
 function render(path, contentType, fn) {
   fs.readFile(__dirname + '/' + path, 'utf-8', function (err, str) {
