@@ -12,7 +12,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>018f8884-1bc1-4212-bd67-ba6ad962a5bb</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>bin\www</StartupFile>
+    <StartupFile>bin/www</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -31,23 +31,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="test\app.request.js">
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
     <Content Include=".gitignore" />
-    <Content Include="public\scripts\index.js">
+    <Compile Include="bin\www">
+      <Publish>True</Publish>
+    </Compile>
+    <Content Include="scripts\index.js">
       <Publish>True</Publish>
     </Content>
-    <Compile Include="routes\index.js" />
-    <Compile Include="bin\www" />
     <Content Include="package.json" />
     <Content Include="README.md" />
-    <Content Include="views\index.jade" />
-    <Content Include="views\layout.jade" />
-    <Content Include="views\error.jade" />
+    <Content Include="views\index.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
-    <Folder Include="public\" />
-    <Folder Include="public\scripts\" />
-    <Folder Include="routes\" />
+    <Folder Include="test\" />
+    <Folder Include="scripts\" />
     <Folder Include="views\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->

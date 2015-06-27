@@ -1,35 +1,30 @@
-﻿var express = require('express'),
-    path = require('path'),
-    bodyParser = require('body-parser'),
-    routes = require('./routes/index'),
-    app = express();
+﻿var http = require('http'),
+    fs = require('fs');
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', routes);
-app.use(function (req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-if (app.get('env') === 'development') {
-    app.use(function (err, req, res) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
+function render(path, contentType, fn) {
+  fs.readFile(__dirname + '/' + path, 'utf-8', function (err, str) {
+    fn(err, str, contentType);
+  });
 }
-app.use(function (err, req, res) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
+
+var app = http.createServer(function (req, res) {
+  var httpHandler = function (err, str, contentType) {
+    if (err) {
+      res.writeHead(500, { 'Content-Type': 'text/plain' });
+      res.end('An error has occured: ' + err.message);
+    } else {
+      res.writeHead(200, { 'Content-Type': contentType });
+      res.end(str);
+    }
+  };
+  if (req.url.indexOf('/scripts/') >= 0) {
+    render(req.url.slice(1), 'application/javascript', httpHandler);
+  } else if (req.headers['x-requested-with'] === 'XMLHttpRequest' && req.headers['x-vanillaajaxwithoutjquery-version'] === '1.0') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ message: 'Hello World!' }));
+  } else {
+    render('views/index.html', 'text/html', httpHandler);
+  }
 });
 
 module.exports = app;
